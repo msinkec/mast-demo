@@ -1,15 +1,20 @@
 import {
     method,
-    SmartContract,
     assert,
     PubKey,
     toByteString,
     Sig,
+    ByteString,
+    prop,
 } from 'scrypt-ts'
-import { ContractState } from '../stateUtils'
-import { MAST, Module } from '../mast'
+import { ContractState, StateUtils } from '../stateUtils'
+import { MAST, ModuleInfo } from '../mast'
+import { ContractModule } from '../abstract/contractModule'
 
-export class ModuleVM extends SmartContract {
+export class ModuleVM extends ContractModule {
+    
+    @prop()
+    static readonly MODULE_ID: ByteString = toByteString('ModuleVM', true)
 
     @method()
     public updateVM(
@@ -17,9 +22,9 @@ export class ModuleVM extends SmartContract {
         partySig: Sig,
         pledgedVM: bigint,
         currentState: ContractState,
-        nextModule: Module
+        nextModule: ModuleInfo
     ) {
-        let updatedState: ContractState = currentState
+        let updatedState: ContractState = StateUtils.cloneState(currentState)
 
         assert(
             partyPubKey == updatedState.party1 || partyPubKey == updatedState.party2,

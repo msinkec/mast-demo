@@ -2,7 +2,7 @@ import { assert, ByteString, hash256, method, prop, Sha256, SmartContractLib, to
 import { MerklePath, MerkleProof } from "./merklePath";
 import { ContractState, StateUtils } from "./stateUtils";
 
-export type Module = {
+export type ModuleInfo = {
     id: ByteString
     script: ByteString
     scriptHash: Sha256
@@ -16,7 +16,7 @@ export class MAST extends SmartContractLib {
 
     @method()
     static updateContract(
-        nextModule: Module,
+        nextModule: ModuleInfo,
         currentState: ContractState,
         updatedState: ContractState,
         utxoScript: ByteString,
@@ -50,14 +50,17 @@ export class MAST extends SmartContractLib {
         return true
     }
 
-
     @method()
-    static isValidModule(module: Module, mastRoot: Sha256): boolean {
+    static isValidModule(module: ModuleInfo, mastRoot: Sha256): boolean {
         const scriptHash = hash256(module.script)
-        const leafHash = hash256(hash256(module.id) + scriptHash)
+        const leafHash = MAST.getLeafHash(module.id, scriptHash)
         return scriptHash == module.scriptHash &&
             MerklePath.calcMerkleRoot(leafHash, module.merkleProof) == mastRoot
     }
 
+    @method()
+    static getLeafHash(moduleId: ByteString, scriptHash: Sha256): Sha256 {
+        return hash256(hash256(moduleId) + scriptHash)
+    }
 
 }

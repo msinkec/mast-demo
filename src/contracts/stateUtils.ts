@@ -40,6 +40,21 @@ export class StateUtils extends SmartContractLib {
     }
 
     @method()
+    static cloneState(
+        contractState: ContractState
+    ): ContractState {
+        return {
+            mastRoot: contractState.mastRoot,
+            party1: contractState.party1,
+            party2: contractState.party2,
+            party1IM: contractState.party1IM,
+            party2IM: contractState.party2IM,
+            party1VM: contractState.party1VM,
+            party2VM: contractState.party2VM
+        } as ContractState
+    }
+
+    @method()
     static isValidState(
         contractState: ContractState,
         utxoScript: ByteString

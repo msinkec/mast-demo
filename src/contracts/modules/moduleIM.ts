@@ -36,14 +36,15 @@ export class ModuleIM extends ContractModule {
         assert(pledgedIM > 0n, 'Pledged amount too low')
 
         if (partyPubKey == updatedState.party1) {
-            updatedState.party1IM = pledgedIM
+            updatedState.party1IM += pledgedIM
         } else {
-            updatedState.party2IM = pledgedIM
+            updatedState.party2IM += pledgedIM
         }
 
         if (updatedState.party1IM > 0n && updatedState.party2IM > 0n) {
             assert(
-                nextModule.id == ModuleVM.MODULE_ID,
+                //nextModule.id == ModuleVM.MODULE_ID,
+                nextModule.id == toByteString('ModuleVM', true),
                 'Next module must be ModuleVM'
             )
         } else {

@@ -35,9 +35,9 @@ export class ModuleVM extends ContractModule {
         assert(pledgedVM > 0n, 'Pledged amount too low')
 
         if (partyPubKey == updatedState.party1) {
-            updatedState.party1IM = pledgedVM
+            updatedState.party1VM = pledgedVM
         } else {
-            updatedState.party2IM = pledgedVM
+            updatedState.party2VM = pledgedVM
         }
 
         if (updatedState.party1VM > 0n && updatedState.party2VM > 0n) {

@@ -1,4 +1,4 @@
-import { assert, ByteString, hash256, method, prop, Sha256, SmartContractLib, toByteString, Utils } from "scrypt-ts";
+import { assert, ByteString, hash256, method, OpCode, prop, Sha256, SmartContractLib, toByteString, Utils } from "scrypt-ts";
 import { MerklePath, MerkleProof } from "./merklePath";
 import { ContractState, StateUtils } from "./stateUtils";
 
@@ -41,6 +41,13 @@ export class MAST extends SmartContractLib {
             contractOutput = Utils.buildOutput(
                 StateUtils.appendScriptWithState(nextModule.script, updatedState),
                 1n
+            )
+        } else {
+           // When terminating include an unspendable OP_RETURN output containing
+           // the latest contract state hash.
+            contractOutput = Utils.buildOutput(
+                StateUtils.appendScriptWithState(toByteString(''), updatedState),
+                0n
             )
         }
 
